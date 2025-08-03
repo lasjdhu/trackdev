@@ -27,7 +27,6 @@ func tick() tea.Cmd {
 type Model struct {
 	width         int
 	height        int
-	showTimer     bool
 	list          list.Model
 	db            *sql.DB
 	keys          *listKeyMap
@@ -67,7 +66,6 @@ func NewModel(db *sql.DB) Model {
 			keys.newTask,
 			keys.editTask,
 			keys.deleteTask,
-			keys.toggleTimer,
 			keys.toggleTask,
 			keys.quit,
 		}
@@ -80,7 +78,6 @@ func NewModel(db *sql.DB) Model {
 	ti.Width = 30
 
 	return Model{
-		showTimer:     true,
 		list:          l,
 		db:            db,
 		keys:          keys,
@@ -190,10 +187,6 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 
 		switch {
-		case key.Matches(msg, m.keys.toggleTimer):
-			m.showTimer = !m.showTimer
-			return m, nil
-
 		case key.Matches(msg, m.keys.newTask):
 			m.creatingNew = true
 			m.textInput.Focus()
@@ -281,7 +274,9 @@ func (m Model) View() string {
 	}
 	timerStyle := TimerStyle
 
-	if m.showTimer {
+	if len(m.list.Items()) == 0 {
+		timerContent = LogoStyle.Render(ascii)
+	} else {
 		timeStr := "00:00:00"
 		if item.timer != nil {
 			timeStr = item.timer.String()
@@ -294,8 +289,6 @@ func (m Model) View() string {
 			}
 		}
 		timerContent = timerStyle.Render(timerBox(timeStr))
-	} else {
-		timerContent = LogoStyle.Render(ascii)
 	}
 
 	timerView := BorderStyle.Width(timerWidth).Height(contentHeight).
@@ -311,7 +304,6 @@ func (m Model) View() string {
 			Width(popupWidth).
 			Height(popupHeight).
 			Border(lipgloss.RoundedBorder()).
-			BorderForeground(secondaryColor).
 			Align(lipgloss.Center, lipgloss.Center).
 			Padding(1, 2).
 			Render(fmt.Sprintf("New Task:\n\n%s\n\nesc to cancel", m.textInput.View()))
@@ -326,7 +318,6 @@ func (m Model) View() string {
 			Width(popupWidth).
 			Height(popupHeight).
 			Border(lipgloss.RoundedBorder()).
-			BorderForeground(secondaryColor).
 			Align(lipgloss.Center, lipgloss.Center).
 			Padding(1, 2).
 			Render(fmt.Sprintf("Edit Task:\n\n%s\n\nesc to cancel", m.textInput.View()))

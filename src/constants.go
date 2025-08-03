@@ -6,12 +6,11 @@ import (
 )
 
 type listKeyMap struct {
-	newTask     key.Binding
-	editTask    key.Binding
-	deleteTask  key.Binding
-	toggleTimer key.Binding
-	toggleTask  key.Binding
-	quit        key.Binding
+	newTask    key.Binding
+	editTask   key.Binding
+	deleteTask key.Binding
+	toggleTask key.Binding
+	quit       key.Binding
 }
 
 func newListKeyMap() *listKeyMap {
@@ -28,10 +27,6 @@ func newListKeyMap() *listKeyMap {
 			key.WithKeys("d"),
 			key.WithHelp("d", "delete task"),
 		),
-		toggleTimer: key.NewBinding(
-			key.WithKeys("v"),
-			key.WithHelp("v", "toggle timer view"),
-		),
 		toggleTask: key.NewBinding(
 			key.WithKeys(" "),
 			key.WithHelp("space", "toggle task timer"),
@@ -44,15 +39,13 @@ func newListKeyMap() *listKeyMap {
 }
 
 var (
-	errorColor     = lipgloss.Color("1")
-	successColor   = lipgloss.Color("2")
-	pauseColor     = lipgloss.Color("3")
-	secondaryColor = lipgloss.Color("4")
-	primaryColor   = lipgloss.Color("5")
+	errorColor   = lipgloss.Color("1")
+	successColor = lipgloss.Color("2")
+	pauseColor   = lipgloss.Color("3")
+	primaryColor = lipgloss.Color("5")
 
 	BorderStyle = lipgloss.NewStyle().
-			BorderStyle(lipgloss.RoundedBorder()).
-			BorderForeground(secondaryColor)
+			BorderStyle(lipgloss.RoundedBorder())
 
 	ItemStyle = lipgloss.NewStyle().
 			PaddingLeft(2)
@@ -73,7 +66,7 @@ var (
 			MarginTop(2)
 
 	LogoStyle = lipgloss.NewStyle().
-			Foreground(secondaryColor).
+			Foreground(primaryColor).
 			Align(lipgloss.Center)
 
 	StatusMessageStyle = lipgloss.NewStyle().
