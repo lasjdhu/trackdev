@@ -12,10 +12,7 @@ type Timer struct {
 }
 
 func NewTimer() *Timer {
-	return &Timer{
-		elapsed: 0,
-		running: false,
-	}
+	return &Timer{}
 }
 
 func (t *Timer) Start() {
@@ -57,10 +54,6 @@ func (t *Timer) Elapsed() time.Duration {
 }
 
 func (t *Timer) String() string {
-	duration := t.Elapsed().Round(time.Second)
-	hours := int(duration.Hours())
-	minutes := int(duration.Minutes()) % 60
-	seconds := int(duration.Seconds()) % 60
-	return fmt.Sprintf("%02d:%02d:%02d", hours, minutes, seconds)
+	d := t.Elapsed().Round(time.Second)
+	return fmt.Sprintf("%02d:%02d:%02d", int(d.Hours()), int(d.Minutes())%60, int(d.Seconds())%60)
 }
-
